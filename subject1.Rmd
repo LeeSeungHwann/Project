@@ -1,0 +1,168 @@
+---
+title: "2주차 과제"
+author: "Lee SeungHwan"
+date: "2024-03-14"
+output: html_document
+---
+
+# **R 기본 사용법**
+
+**2주차 R 기본 사용법 파일을 기반으로 R 사용법을 숙지하시고, 예제 1\~9에 대한 코드를 작성하여 R 마크다운 보고서로 작성해주시기 바랍니다. 작성된 과제물은 Github 저장소에 rmd 파일로 업로드 해주세요!**
+
+**(예제 1) 기본연산 및 수학함수를 활용하여 아래를 계산하시오.**
+
+```{r }
+# 1) 제곱근
+sqrt(2)
+
+# 2) 지수함수
+exp(5)
+
+# 3) 상용로그
+log10(20)
+
+# 4) 자연로그
+log(20)
+
+# 5) 감마함수
+gamma(5)
+
+# 6) 절대값
+abs(-4.5)
+
+# 7) 반올림
+round(pi, digits = 2)
+```
+
+**(예제 2) 다음과 같은 분포에 대한 확률밀도함수를 산출하시오.**
+
+```{r}
+# 1) 정규분포 : x = 5, mean = 5, sd = 1 (dnorm)
+dnorm(5, mean = 5, sd =1, log = FALSE)
+
+# 2) 지수분포 : x = 1, rate = 5 (dexp)
+dexp(1, rate = 5, log = FALSE)
+
+# 3) 와이블분포 : x = 50, shape = 80, scale = 1.5 (dweibull)
+dweibull(50, shape = 80, scale = 1.5, log = FALSE)
+```
+
+**(예제 3) A = 5, B = 6일 때 변수를 할당하여 다음 식을 계산하시오. 계산이 끝난 후 A와 B 변수를 한번에 지우도록 스크립트를 작성하시오.**
+
+```{r}
+# A = 5, B = 6 할당
+A <- 5
+B <- 6
+# 1) 2A + B^2
+2*A + B^2
+# 2) A^5 * 3^B
+A^5 * 3^B
+# 모든 변수 삭제
+rm(list = ls())
+```
+
+**(예제 4) 다음과 같이 정규분포에 대한 확률밀도함수를 기반으로 입, 출력 함수를 정의하시오.**
+
+```{r}
+# 입력인자 : 𝑥𝜇𝜎/ 출력값 : 10*𝑓(𝑥)
+
+m1_dNorm <- function(a, m, s){
+  rslt <- (1 / (s*sqrt(2*pi))) * exp(-((a - m)^2)/(2*s^2))
+  return(10*rslt)
+}
+m1_dNorm(5,5,1)
+
+# 정규 분포 확률밀도함수 dnorm 활용
+m2_dNorm <- function(a, m, s){
+  rslt <- 10 * dnorm(x = a, mean = m, sd = s)
+  return(rslt)
+}
+m2_dNorm(5,5,1)
+```
+
+**(예제 5) 합 : sum, 곱 : prod 함수를 사용할 때, 아래의 연산을 수행하시오.**
+
+```{r}
+#예제5-1 
+x <- c(1:100)
+sum(x^2)
+rm(x)
+
+#예제5-2
+x <- c(1:10)
+prod(x)
+rm(x)
+
+#예제5-3
+x <- c(1:20) / 20 * pi
+sum(cos(x))
+rm(x)
+```
+
+**(예제 6) 2의 배수로 구성된 3\*3 행렬을 생성하고, 행 이름을 알파벳, 열 이름을 한글로 정의하시오. 또한, 2행 3열에 해당하는 값을 추출하시오.**
+
+```{r}
+# 2의 배수로 구성된 3*3 행렬 생성
+x <- c(1:9)
+x2 <- x * 2
+mat <- matrix(x2, nrow = 3, ncol = 3, byrow = TRUE)
+# 행 이름을 알파벳, 열 이름을 한글로 정의
+dimnames(mat)[[1]] <- c("A", "B", "C")
+dimnames(mat)[[2]] <- c("가", "나", "다")
+mat
+# 2행 3열에 해당하는 값 추출
+mat[2,3]
+```
+
+**(예제 7) R에서 기본으로 제공되는 iris 데이터에서, 종류(Species)가 'virginica'인 데이터만 추출하시오.**
+
+```{r}
+# (1) 함수 생성
+data(iris)
+Vir_Species <- function(row){
+  rslt <- TRUE
+  if(iris[row,'Species'] == 'virginica')  rslt <- TRUE
+  else                                    rslt <- FALSE
+  return(rslt)
+}
+for(i in 1:nrow(iris)){
+  if(Vir_Species(i) == TRUE)    print(iris[i,1:5])
+}
+# (2) 데이터프레임 특성 이용
+data(iris)
+vir_Species <- iris[iris$Species == 'virginica',]
+vir_Species
+```
+
+**(예제 8) iris 데이터의 3번째 열, Species 변수를 각각 벡터로 저장하고, 두 벡터를 원소로 가지는 리스트를 생성하시오.**
+
+```{r}
+# iris data Set
+data(iris)
+# 3번째 열 벡터 저장
+vect1 <- c(iris$Petal.Length)
+# Species 변수 벡터 저장
+vect2 <- c(iris$Species)
+# 두 벡터를 원소로 가지는 리스트 생성
+m_list <- list(vect1,vect2)
+m_list
+```
+
+**(예제 9) 데이터를 입력값으로 받아서 데이터의 각 행마다 아래의 반복문을 수행하는 함수 코드를 작성하시오.**
+
+```{r}
+# iris data set
+data(iris)
+# 주어진 조건 함수화
+Chk_Species <- function(row){
+  rslt <- if      (iris[row,'Species'] == 'setosa')      "1"
+          else if (iris[row,'Species'] == 'versicolor')  "2"
+          else if (iris[row,'Species'] == 'virginica')   "3"
+          else "Error"  
+  print(rslt)
+}
+# 함수 실행
+for(i in 1:nrow(iris)){
+  Chk_Species(i)
+}
+```
